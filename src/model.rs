@@ -8,12 +8,12 @@ use std::mem::size_of;
 
 use binrw::BinRead;
 use binrw::BinReaderExt;
-use binrw::{BinWrite, BinWriterExt, binrw};
+use binrw::{binrw, BinWrite, BinWriterExt};
 
 use crate::common_file_operations::{read_bool_from, write_bool_as};
 use crate::model_vertex_declarations::{
-    VERTEX_ELEMENT_SIZE, VertexDeclaration, VertexType, VertexUsage, vertex_element_parser,
-    vertex_element_writer,
+    vertex_element_parser, vertex_element_writer, VertexDeclaration, VertexType, VertexUsage,
+    VERTEX_ELEMENT_SIZE,
 };
 use crate::{ByteBuffer, ByteSpan};
 
@@ -780,6 +780,13 @@ impl MDL {
                 let mut vertex_stream_strides = vec![];
                 let mesh = &model.meshes[j as usize];
                 for stream in 0..mesh.vertex_stream_count {
+                    if stream as usize >= mesh.vertex_buffer_offsets.len() {
+                        warn!(
+                            "Stream {} is greater than the number of vertex buffer offsets",
+                            stream
+                        );
+                        break;
+                    }
                     let mut vertex_data = vec![];
                     let stride = mesh.vertex_buffer_strides[stream as usize];
                     for z in 0..mesh.vertex_count {

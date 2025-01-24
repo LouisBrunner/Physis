@@ -5,13 +5,13 @@
 
 use std::io::Cursor;
 
-use crate::ByteSpan;
 use crate::common_file_operations::{Half1, Half2, Half3};
 use crate::mtrl::ColorDyeTable::{
     DawntrailColorDyeTable, LegacyColorDyeTable, OpaqueColorDyeTable,
 };
 use crate::mtrl::ColorTable::{DawntrailColorTable, LegacyColorTable, OpaqueColorTable};
-use binrw::{BinRead, BinResult, binread, binrw};
+use crate::ByteSpan;
+use binrw::{binread, binrw, BinRead, BinResult};
 
 #[binrw]
 #[derive(Debug)]
@@ -320,7 +320,7 @@ pub struct Constant {
 // from https://github.com/NotAdam/Lumina/blob/master/src/Lumina/Data/Parsing/MtrlStructs.cs
 #[binrw]
 #[repr(u8)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum TextureUsage {
     #[brw(magic = 0x88408C04u32)]
     Sampler,
@@ -375,9 +375,9 @@ pub enum TextureUsage {
 #[repr(C)]
 #[allow(dead_code)]
 pub struct Sampler {
-    texture_usage: TextureUsage,
+    pub texture_usage: TextureUsage,
     flags: u32, // TODO: unknown
-    texture_index: u8,
+    pub texture_index: u8,
     unknown1: u8,
     unknown2: u8,
     unknown3: u8,

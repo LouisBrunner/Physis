@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2023 Joshua Goins <josh@redstrate.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-use crate::race::{Gender, Race, Subrace, get_race_id};
+use crate::race::{get_race_id, Gender, Race, Subrace};
 
 #[repr(u8)]
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 /// The slot the item is for.
 pub enum Slot {
     /// The head slot. Shorthand is "met".
@@ -99,7 +99,7 @@ pub fn build_equipment_path(
 }
 
 #[repr(u8)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, Debug)]
 pub enum CharacterCategory {
     Body,
     Hair,

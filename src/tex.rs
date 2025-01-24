@@ -71,12 +71,13 @@ struct TexHeader {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TextureType {
     TwoDimensional,
     ThreeDimensional,
 }
 
+#[derive(Debug)]
 pub struct Texture {
     /// Type of texture
     pub texture_type: TextureType,
