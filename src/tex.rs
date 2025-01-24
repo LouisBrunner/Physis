@@ -71,12 +71,13 @@ struct TexHeader {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TextureType {
     TwoDimensional,
     ThreeDimensional,
 }
 
+#[derive(Debug)]
 pub struct Texture {
     /// Type of texture
     pub texture_type: TextureType,
@@ -97,8 +98,6 @@ impl Texture {
     pub fn from_existing(buffer: ByteSpan) -> Option<Texture> {
         let mut cursor = Cursor::new(buffer);
         let header = TexHeader::read(&mut cursor).ok()?;
-
-        println!("{:#?}", header.attribute);
 
         cursor
             .seek(SeekFrom::Start(std::mem::size_of::<TexHeader>() as u64))

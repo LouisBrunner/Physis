@@ -4,7 +4,7 @@
 use crate::race::{get_race_id, Gender, Race, Subrace};
 
 #[repr(u8)]
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 /// The slot the item is for.
 pub enum Slot {
     /// The head slot. Shorthand is "met".
@@ -21,8 +21,10 @@ pub enum Slot {
     Earring,
     /// The neck slot. Shorthand is "nek".
     Neck,
+    /// The ring slot. Shorthand is "ril".
+    RingLeft,
     /// The ring slot. Shorthand is "rir".
-    Rings,
+    RingRight,
     /// The wrists slot. Shorthand is "wrs".
     Wrists,
 }
@@ -37,7 +39,8 @@ pub fn get_slot_abbreviation(slot: Slot) -> &'static str {
         Slot::Body => "top",
         Slot::Earring => "ear",
         Slot::Neck => "nek",
-        Slot::Rings => "rir",
+        Slot::RingLeft => "ril",
+        Slot::RingRight => "rir",
         Slot::Wrists => "wrs",
     }
 }
@@ -53,7 +56,8 @@ pub fn get_slot_from_id(id: i32) -> Option<Slot> {
         4 => Some(Slot::Body),
         9 => Some(Slot::Earring),
         10 => Some(Slot::Neck),
-        12 => Some(Slot::Rings),
+        12 => Some(Slot::RingLeft),
+        13 => Some(Slot::RingRight),
         11 => Some(Slot::Wrists),
         _ => None,
     }
@@ -70,7 +74,8 @@ pub fn get_slot_from_abbreviation(abrev: &str) -> Option<Slot> {
         "top" => Some(Slot::Body),
         "ear" => Some(Slot::Earring),
         "nek" => Some(Slot::Neck),
-        "rir" => Some(Slot::Rings),
+        "ril" => Some(Slot::RingLeft),
+        "rir" => Some(Slot::RingRight),
         "wrs" => Some(Slot::Wrists),
         _ => None,
     }
@@ -94,7 +99,7 @@ pub fn build_equipment_path(
 }
 
 #[repr(u8)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, Debug)]
 pub enum CharacterCategory {
     Body,
     Hair,
@@ -119,7 +124,7 @@ pub fn get_character_category_abbreviation(category: CharacterCategory) -> &'sta
         CharacterCategory::Hair => "hir",
         CharacterCategory::Face => "fac",
         CharacterCategory::Tail => "til",
-        CharacterCategory::Ear => "ear",
+        CharacterCategory::Ear => "zir",
     }
 }
 
@@ -129,7 +134,7 @@ pub fn get_character_category_prefix(category: CharacterCategory) -> &'static st
         CharacterCategory::Hair => "h",
         CharacterCategory::Face => "f",
         CharacterCategory::Tail => "t",
-        CharacterCategory::Ear => "e",
+        CharacterCategory::Ear => "z",
     }
 }
 

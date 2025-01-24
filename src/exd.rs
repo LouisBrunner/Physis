@@ -14,6 +14,7 @@ use crate::ByteSpan;
 #[brw(magic = b"EXDF")]
 #[brw(big)]
 #[allow(dead_code)]
+#[derive(Debug)]
 struct EXDHeader {
     version: u16,
 
@@ -24,6 +25,7 @@ struct EXDHeader {
 
 #[binrw]
 #[brw(big)]
+#[derive(Debug)]
 struct ExcelDataOffset {
     row_id: u32,
     pub offset: u32,
@@ -40,6 +42,7 @@ struct ExcelDataRowHeader {
 #[binrw]
 #[brw(big)]
 #[allow(dead_code)]
+#[derive(Debug)]
 pub struct EXD {
     header: EXDHeader,
 
@@ -50,7 +53,7 @@ pub struct EXD {
     pub rows: Vec<ExcelRow>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ColumnData {
     String(String),
     Bool(bool),
@@ -65,6 +68,7 @@ pub enum ColumnData {
     UInt64(u64),
 }
 
+#[derive(Debug)]
 pub struct ExcelRow {
     pub data: Vec<ColumnData>,
 }

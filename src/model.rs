@@ -9,9 +9,13 @@ use std::mem::size_of;
 use binrw::BinRead;
 use binrw::BinReaderExt;
 use binrw::{binrw, BinWrite, BinWriterExt};
+use tracing::warn;
 
 use crate::common_file_operations::{read_bool_from, write_bool_as};
-use crate::model_vertex_declarations::{vertex_element_parser, vertex_element_writer, VertexDeclaration, VertexType, VertexUsage, VERTEX_ELEMENT_SIZE};
+use crate::model_vertex_declarations::{
+    vertex_element_parser, vertex_element_writer, VertexDeclaration, VertexType, VertexUsage,
+    VERTEX_ELEMENT_SIZE,
+};
 use crate::{ByteBuffer, ByteSpan};
 
 pub const NUM_VERTICES: u32 = 17;
@@ -551,7 +555,8 @@ impl MDL {
                                         MDL::read_byte_float4(&mut cursor).unwrap();
                                 }
                                 VertexType::Byte4 => {
-                                    vertices[k as usize].bone_weight = MDL::read_tangent(&mut cursor).unwrap();
+                                    vertices[k as usize].bone_weight =
+                                        MDL::read_tangent(&mut cursor).unwrap();
                                 }
                                 VertexType::UnsignedShort4 => {
                                     let bytes = MDL::read_unsigned_short4(&mut cursor).unwrap();
@@ -746,8 +751,7 @@ impl MDL {
                         for shape_value in shape_values {
                             let old_vertex =
                                 vertices[indices[shape_value.base_indices_index as usize] as usize];
-                            let new_vertex = vertices[shape_value.replacing_vertex_index
-                                as usize];
+                            let new_vertex = vertices[shape_value.replacing_vertex_index as usize];
                             let vertex = &mut morphed_vertices
                                 [indices[shape_value.base_indices_index as usize] as usize];
 
@@ -777,6 +781,13 @@ impl MDL {
                 let mut vertex_stream_strides = vec![];
                 let mesh = &model.meshes[j as usize];
                 for stream in 0..mesh.vertex_stream_count {
+                    if stream as usize >= mesh.vertex_buffer_offsets.len() {
+                        warn!(
+                            "Stream {} is greater than the number of vertex buffer offsets",
+                            stream
+                        );
+                        break;
+                    }
                     let mut vertex_data = vec![];
                     let stride = mesh.vertex_buffer_strides[stream as usize];
                     for z in 0..mesh.vertex_count {
@@ -786,8 +797,9 @@ impl MDL {
                             .seek(SeekFrom::Start(
                                 (model.lods[i as usize].vertex_data_offset
                                     + model.meshes[j as usize].vertex_buffer_offsets
-                                    [stream as usize]
-                                    + (z as u32 * stride as u32)) as u64,
+                                        [stream as usize]
+                                    + (z as u32 * stride as u32))
+                                    as u64,
                             ))
                             .ok()?;
 
@@ -797,7 +809,8 @@ impl MDL {
                     }
 
                     vertex_streams.push(vertex_data);
-                    vertex_stream_strides.push(mesh.vertex_buffer_strides[stream as usize] as usize);
+                    vertex_stream_strides
+                        .push(mesh.vertex_buffer_strides[stream as usize] as usize);
                 }
 
                 parts.push(Part {
@@ -808,7 +821,7 @@ impl MDL {
                     submeshes,
                     shapes,
                     vertex_streams,
-                    vertex_stream_strides
+                    vertex_stream_strides,
                 });
             }
 
@@ -1047,7 +1060,7 @@ impl MDL {
                                             &mut cursor,
                                             &MDL::pad_slice(&vert.position, 1.0),
                                         )
-                                            .ok()?;
+                                        .ok()?;
                                     }
                                     VertexType::Half4 => {
                                         MDL::write_half4(

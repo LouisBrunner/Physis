@@ -137,10 +137,10 @@ pub struct CharacterData {
     /// The character's selected hair.
     pub hair: u8,
 
-    /// If hair highlights are enabled for this character.
+    /// If fur/hair highlights are enabled for this character.
     #[br(map = read_bool_from::<u8>)]
     #[bw(map = write_bool_as::<u8>)]
-    pub enable_highlights: bool,
+    pub enable_fur_highlights: bool,
 
     /// The character's skin tone.
     pub skin_tone: u8,
@@ -151,14 +151,14 @@ pub struct CharacterData {
     /// The character's hair color.
     pub hair_tone: u8,
 
-    /// The color of the hair highlights.
-    pub highlights: u8,
+    /// The color of the fur/hair highlights.
+    pub fur_highlights: u8,
 
     /// The selected facial features.
     pub facial_features: u8,
 
     /// If the character has limbal eyes.
-    pub limbal_eyes: u8,
+    pub limbal_eyes_tattoo: u8,
 
     /// The character's selected eyebrows.
     pub eyebrows: u8,
@@ -179,7 +179,10 @@ pub struct CharacterData {
     pub mouth: u8,
 
     /// The character's selected pattern.
-    pub lips_tone_fur_pattern: u8,
+    pub fur_pattern_lips_color: u8,
+
+    /// The character's selected pattern.
+    pub muscle_tone_tail_ear_length: u8,
 
     /// The character's selected tail.
     pub tail: u8,
@@ -199,6 +202,9 @@ pub struct CharacterData {
     /// The timestamp when the preset was created.
     #[br(pad_before = 1)]
     pub timestamp: [u8; 4],
+
+    /// Comment for the preset.
+    pub comment: [u8; 40],
 }
 
 impl CharacterData {

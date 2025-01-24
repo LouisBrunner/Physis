@@ -15,6 +15,7 @@ use crate::ByteSpan;
 #[brw(magic = b"EXHF")]
 #[brw(big)]
 #[allow(dead_code)]
+#[derive(Debug)]
 pub struct EXHHeader {
     pub(crate) version: u16,
 
@@ -30,6 +31,7 @@ pub struct EXHHeader {
 
 #[binrw]
 #[brw(repr(u16))]
+#[derive(Debug, Clone)]
 pub enum ColumnDataType {
     String = 0x0,
     Bool = 0x1,
@@ -55,6 +57,7 @@ pub enum ColumnDataType {
 
 #[binrw]
 #[brw(big)]
+#[derive(Debug)]
 pub struct ExcelColumnDefinition {
     pub data_type: ColumnDataType,
     pub offset: u16,
@@ -63,6 +66,7 @@ pub struct ExcelColumnDefinition {
 #[binrw]
 #[brw(big)]
 #[allow(dead_code)]
+#[derive(Debug)]
 pub struct ExcelDataPagination {
     pub start_id: u32,
     pub row_count: u32,
@@ -71,6 +75,7 @@ pub struct ExcelDataPagination {
 #[binrw]
 #[brw(big)]
 #[allow(dead_code)]
+#[derive(Debug)]
 pub struct EXH {
     pub header: EXHHeader,
 
